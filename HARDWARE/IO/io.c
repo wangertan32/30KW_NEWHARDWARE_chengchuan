@@ -536,7 +536,7 @@ if(io_temp!=0x0ffc)	   ///// 有故障发生
 					System_State = FAULT;
 				}				
 				
-///// 控制信号	急停发生
+///// 控制信号	急停发生 测试
 		  if(statio.io.emo==0)
 			 {
 					fault_code = EMERGENCY_STOP;
