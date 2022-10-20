@@ -424,7 +424,7 @@ u16 CRC16_XMODEM(u8 *puchMsg, u16 usDataLen)
  ** 输出   :无
  ** 返回   :总帧数
 ***************************************************************/
-u8 can2_tbuf[50]={0};
+u8 can2_tbuf[50]={0};  //0x33     0             14      
 u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 {
 		u32 crc=0;
@@ -433,11 +433,11 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 	
 		memset(can2_tbuf,0,sizeof(can2_tbuf));
 		
-		can2_tbuf[FrameNum*8+0]=SegNum0;
-		can2_tbuf[FrameNum*8+1]=PROTOCOL_NOR;
-		can2_tbuf[FrameNum*8+2]=CSU_TYPE;
-		can2_tbuf[FrameNum*8+3]=CSU_ADDR;
-		can2_tbuf[FrameNum*8+4]=order;
+		can2_tbuf[FrameNum*8+0]=SegNum0;     /// 0x00
+		can2_tbuf[FrameNum*8+1]=PROTOCOL_NOR;  // 0xe0
+		can2_tbuf[FrameNum*8+2]=CSU_TYPE;       //0x7d
+		can2_tbuf[FrameNum*8+3]=CSU_ADDR;      // 0x78
+		can2_tbuf[FrameNum*8+4]=order;        // 0x33
 		
 		switch(order)
 		{
@@ -448,7 +448,7 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 				can2_tbuf[FrameNum*8+7]=RTN_CODE;					
 			}				
 			break;
-			case FUNC_SEEKSTAT:	
+			case FUNC_SEEKSTAT:	   ///// 查询状态值
 			{
 				can2_tbuf[FrameNum*8+5]=0x00;
 				can2_tbuf[FrameNum*8+6]=0x01;
@@ -464,7 +464,7 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 			break;
 		}
 		
-		FrameNum=PreProcess_CanOrder(order);      //// 返回数据长度
+		FrameNum=PreProcess_CanOrder(order);      //// 返回数据长度 4
 		
 		switch(FrameNum)
 		{
@@ -474,8 +474,8 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 				can2_tbuf[(FrameNum-1)*8+1]=SHEET_SN;
 				can2_tbuf[(FrameNum-1)*8+2]=REV_DATA1;
 				can2_tbuf[(FrameNum-1)*8+3]=REV_DATA0;
-				can2_tbuf[(FrameNum-1)*8+4]=len_data>>8;
-				can2_tbuf[(FrameNum-1)*8+5]=len_data&0xff;
+				can2_tbuf[(FrameNum-1)*8+4]=len_data>>8;  
+				can2_tbuf[(FrameNum-1)*8+5]=len_data&0xff;  
 				
 				memcpy(&crc_table,&can2_tbuf[(FrameNum-2)*8+1],7);
 				memcpy(&crc_table[7],&can2_tbuf[(FrameNum-1)*8+1],5);
@@ -513,23 +513,23 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 				can2_tbuf[(FrameNum-1)*8+7]=0x0;		
 			}				
 			break;
-			case 4:	
+			case 4:	        //  FrameNum=4                          //// 查询状态值
 			{
-				can2_tbuf[(FrameNum-3)*8+0]=FrameNum-3;
+				can2_tbuf[(FrameNum-3)*8+0]=FrameNum-3;   // 第8字节数据
 				can2_tbuf[(FrameNum-3)*8+1]=SHEET_SN;
 				can2_tbuf[(FrameNum-3)*8+2]=REV_DATA1;
 				can2_tbuf[(FrameNum-3)*8+3]=REV_DATA0;
 				can2_tbuf[(FrameNum-3)*8+4]=0;
-				can2_tbuf[(FrameNum-3)*8+5]=len_data;
+				can2_tbuf[(FrameNum-3)*8+5]=len_data;   //14
 				
-				can2_tbuf[(FrameNum-3)*8+6]=*data;   	
-				can2_tbuf[(FrameNum-3)*8+7]=*(data+1);   
+				can2_tbuf[(FrameNum-3)*8+6]=*data;   	  // 14位     data 0
+				can2_tbuf[(FrameNum-3)*8+7]=*(data+1);   // 15位    data1
 				
-				can2_tbuf[(FrameNum-2)*8+0]=FrameNum-2;
-				can2_tbuf[(FrameNum-2)*8+1]=*(data+2);
+				can2_tbuf[(FrameNum-2)*8+0]=FrameNum-2;     
+				can2_tbuf[(FrameNum-2)*8+1]=*(data+2);      // data2
 				can2_tbuf[(FrameNum-2)*8+2]=*(data+3);
 				can2_tbuf[(FrameNum-2)*8+3]=*(data+4);
-				can2_tbuf[(FrameNum-2)*8+4]=*(data+5);				
+				can2_tbuf[(FrameNum-2)*8+4]=*(data+5);		  //data5		
 				
 				can2_tbuf[(FrameNum-1)*8+0]=0x80+FrameNum-1;	
 				
@@ -645,7 +645,7 @@ u8 PreProcess_CanOrder(u8 order)
 							len=0;
 					break;
 										
-					case FUNC_SEEKSTAT:
+					case FUNC_SEEKSTAT:    /////
 							len=14;
 					break;
 					

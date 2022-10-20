@@ -434,9 +434,11 @@ void can_task(void *p_arg)
 						data[2] = (statio.all&0xff);
 						data[3] = statio.io.emo;
 						data[4] = 0x00;
+//						data[3] = ((statio.all>>8)&0xff);
+//						data[4] = ((statio.all>>16)&0xff);
 						data[5] = 0x00;
 						num_frame=can2_data_packet(FUNC_SEEKSTAT,0,14,data);        /// can打包数据
-						Can2Send_MultiMessages(canid_tx, can2_tbuf, num_frame*8);   //// can发送数据
+						Can2Send_MultiMessages(canid_tx, can2_tbuf, num_frame*8);   //// can发送数据 给ptc
 						
 						Write_Log();      //// 记录到sd
 					}
@@ -780,7 +782,7 @@ static void Set_ptcdata(void)
 			SetPTCData.s_INV_fre& 0xff,
 		};
 		
-		SetPTCData.s_set_statu = RESET;
+		SetPTCData.s_set_statu = RESET;   //// 
 		while((i<10)&&(SetPTCData.s_set_statu != SET))
 		{
 			num_frame=can2_data_packet(FUNC_CONFIG, 0, 21 ,data);

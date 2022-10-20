@@ -904,25 +904,23 @@ void screen_datasend(u8 order)
 	mcgs_buf[3]= ADDR_SCREEN;
 	mcgs_buf[4]= order;
 	
-//	AppendTwoBytes(mcgs_buf, &len, System_State);	   ///系统状态 待机 运行 故障 告警 急停
-//	AppendTwoBytes(mcgs_buf, &len, warning_code);    ///警告信息 温度 风扇 烟感等
-//	AppendTwoBytes(mcgs_buf, &len, fault_code);      ///错误信息  功率开关 急停等
+	AppendTwoBytes(mcgs_buf, &len, System_State);	   ///系统状态 待机 运行 故障 告警 急停
+	AppendTwoBytes(mcgs_buf, &len, warning_code);    ///警告信息 温度 风扇 烟感等
+	AppendTwoBytes(mcgs_buf, &len, fault_code);      ///错误信息  功率开关 急停等
 	
 //////// 输入假数据
-	AppendTwoBytes(mcgs_buf, &len, System_State);	
-	if(flag_tri==0)
-	{
-	   AppendTwoBytes(mcgs_buf, &len, 3);
-		flag_tri=1;
-	}
-	else{
-		   AppendTwoBytes(mcgs_buf, &len, 4);	
-		flag_tri=0;
-	}
-	AppendTwoBytes(mcgs_buf, &len, fault_code);
+//	AppendTwoBytes(mcgs_buf, &len, System_State);	
+//	if(flag_tri==0)
+//	{
+//	   AppendTwoBytes(mcgs_buf, &len, 3);
+//		flag_tri=1;
+//	}
+//	else{
+//		   AppendTwoBytes(mcgs_buf, &len, 4);	
+//		flag_tri=0;
+//	}
+//	AppendTwoBytes(mcgs_buf, &len, fault_code);
    
-	
-	
 ////////////
 	AppendTwoBytes(mcgs_buf, &len, PTCElectData.Input_v);    //输入电压
 	AppendTwoBytes(mcgs_buf, &len, PTCElectData.Input_i/10);   //输入电流

@@ -19,6 +19,10 @@ void io_Init(void)
 
 	GPIO_InitStructure.GPIO_Pin = LED_LAM | LED_Run |LED_Fault |LED_Stop |RESET;
 	GPIO_Init(GPIOE, &GPIO_InitStructure);//初始化
+/////// 失效转移接触器控制初始化	
+	GPIO_InitStructure.GPIO_Pin = OUTPUT_RLY;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);//初始化	
+	
 	
 	
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;//普通输入模式
@@ -36,9 +40,11 @@ void io_Init(void)
 
 ///////////在此处增加接线端子io初始化  TERMINAL_STAT
 //	GPIO_InitStructure.GPIO_Pin = TERMINAL_STAT;
-//  GPIO_Init(   , &GPIO_InitStructure);
+//  GPIO_Init(   , &GPIO_InitStructure);    //// 接线端子io初始化
 
-
+	GPIO_InitStructure.GPIO_Pin = SPARE1_DSC | SPARE2_DSC;	
+  GPIO_Init(GPIOB, &GPIO_InitStructure);  //两个预留口初始化
+	
 
 
 //////////
@@ -79,13 +85,17 @@ io读的故障
 19   主功率继电器状态-输入
 20   预充继电器状态-输入 
 ADD
-21   接线端子过温
+21   接线端子过温               x
 **************************/
+/*******
+是否不需要将全部信号上传
+
+*******/
 void read_io(void)
 {
 //	u8 io_temp=0; 
 		u16   io_temp=0; 
-////////////////////
+//////////////////// add
 // 假设接线端子1 报警 / 0 正常	
 //	if(READ_TERMINAL_STAT == 1)    //接线端子温度80℃
 //	{
@@ -102,6 +112,43 @@ void read_io(void)
 //	{
 //				statio.io.TERMINAL_STAT = 0;
 //	}
+////////////// 运行按钮输入信号 0按下 1正常
+	if(READ_SPARE1_DSC == 0)
+	{
+			delay_ms(100);
+		if(READ_SPARE1_DSC == 0)
+		{
+				statio.io.SPARE1_DSC_STAT = 0;    //// 急停开关状态-输入
+		}
+	}else if(READ_SPARE1_DSC == 1)
+	{
+			delay_ms(100);
+		if(READ_SPARE1_DSC == 1)
+		{
+				statio.io.SPARE1_DSC_STAT = 1;
+		}	
+	}		
+//////// 停止按钮输入信号 0正常 1 按下	
+	if(READ_SPARE2_DSC == 1)
+	{
+			delay_ms(100);
+		if(READ_SPARE2_DSC == 1)
+		{
+				statio.io.SPARE2_DSC_STAT = 1;    //// 急停开关状态-输入
+		}
+	}else if(READ_SPARE2_DSC == 0)
+	{
+			delay_ms(100);
+		if(READ_SPARE2_DSC == 0)
+		{
+				statio.io.SPARE2_DSC_STAT = 0;
+		}	
+	}		
+	
+	
+	
+	
+	
 	
 ///////////
 	if(READ_TH3 == 1)    //利兹线接线铜盘温度75°
@@ -488,7 +535,7 @@ void read_io(void)
 if(io_temp!=0x0ffc)	   ///// 有故障发生
 {
 //////// 温度信号		  注意高低信号
-//////// 似乎也不需要 在屏端解析io信号	
+////////  故障信号	
 				if(statio.io.extohd==0)  ////外部感温线故障   waring
 				{
 					warning_code=OVEXT;
@@ -536,7 +583,7 @@ if(io_temp!=0x0ffc)	   ///// 有故障发生
 					System_State = FAULT;
 				}				
 				
-///// 控制信号	急停发生 测试
+///// 控制信号	急停发生 
 		  if(statio.io.emo==0)
 			 {
 					fault_code = EMERGENCY_STOP;

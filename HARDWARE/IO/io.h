@@ -5,11 +5,24 @@
 #include "usart.h"
 //BSRRH 表示BSRR寄存器高16位（BRy），哪一个BRy置1，引脚输出低电平
 //BSRRL 表示BSRR寄存器低16位（BSy），哪一个BRy置1，引脚输出高电平
+////// 接线端子过温
+///// 失效转移接触器控制     OUTPUT_RLY      PE14   输出                  v
+///  内部感热线检测信号     INT_OHD          PD1    输入                  v
+//// 远程控制停止           Remote_Stop      PD13   输入                  v
+//// 远程控制运行信号       Remote_Run       PD14   输入                  v
+//// 预留接口1 SPARE1_DSC pb15    运行按钮输入信号，CSU引脚低电平  输入   v
+//// 预留接口2 SPARE2_DSC pb13    停止按钮输入信号，CSU引脚高电平  输入   v
+
 
 #define   RCC_ALL_IO 	(RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC |RCC_AHB1Periph_GPIOD| RCC_AHB1Periph_GPIOE | RCC_AHB1Periph_GPIOG)
 
 //输入状态
+////
+//    #define TERMINAL_STAT   GPIO_Pin_			//接线端子过温
+#define SPARE1_DSC	GPIO_Pin_15			//PB15    运行按钮输入信号-输入   1-正常，0-按下
+#define SPARE2_DSC	GPIO_Pin_13			//PB13    停止按钮输入信号-输入 	0-正常，1-按下
 
+/////
 #define REMOTE_RUN	GPIO_Pin_14			//PD14    远程控制运行信号-输入   1-正常，0-按下
 #define REMOTE_STOP	GPIO_Pin_13			//PD13    远程控制停止信号-输入 	1-正常，0-按下
 #define EXT_RESET		GPIO_Pin_9			//PG9  		外部复位信号-输入    1-正常，0-复位
@@ -36,10 +49,13 @@
 #define SMOKE_STAT  GPIO_Pin_9      //PD9 烟感  1-正常，0-报警
 #define MFAN_STAT   GPIO_Pin_8			//PD8 主风扇   1-正常，0-报警
 
-//    #define TERMINAL_STAT   GPIO_Pin_			//接线端子过温
 
 //输出控制
 #define RESET 			GPIO_Pin_10		//PE10  安全单元复位 
+#define OUTPUT_RLY  GPIO_Pin_14   //PE14  失效转移接触器控制
+ 
+#define  	OUTPUT_RLY_ON()      GPIOE->BSRRL = OUTPUT_RLY     /////失效转移接触器控制 输出高电平
+#define  	OUTPUT_RLY_OFF()     GPIOE->BSRRH = OUTPUT_RLY     /////失效转移接触器控制 输出低电平·
 //#define RELAY_MC1
 //#define RELAY_MC2
 //#define OUTPUT_RELAY
@@ -66,8 +82,12 @@
 
 #define  	RESET_ON()      GPIOE->BSRRL = RESET
 #define  	RESET_OFF()     GPIOE->BSRRH = RESET
+////////////////
+// #define READ_TERMINAL_STAT  GPIO_ReadInputDataBit( ,TERMINAL_STAT)  ////接线端子
+#define READ_SPARE1_DSC  GPIO_ReadInputDataBit(GPIOB,SPARE1_DSC)	  //  读io状态
+#define READ_SPARE2_DSC  GPIO_ReadInputDataBit(GPIOB,SPARE2_DSC)    //
 
-
+//////////
 #define READ_REMOTE_RUN  GPIO_ReadInputDataBit(GPIOD,REMOTE_RUN)	
 #define READ_REMOTE_STOP  GPIO_ReadInputDataBit(GPIOD,REMOTE_STOP)
 #define READ_EXT_RESET  GPIO_ReadInputDataBit(GPIOG,EXT_RESET)
@@ -90,7 +110,7 @@
 #define READ_POWER_STAT  GPIO_ReadInputDataBit(GPIOA,POWER_STAT)
 
 
-// #define READ_TERMINAL_STAT  GPIO_ReadInputDataBit( ,TERMINAL_STAT)  ////接线端子
+
 
 
 typedef union{
@@ -113,8 +133,10 @@ typedef union{
 					u8 emo:1; //PG4  		急停开关状态-输入    1-正常，0-按下    
 				  /////
 				  u8 TERMINAL_STAT:1 ;   //// 接线端子温度
+				  u8 SPARE1_DSC_STAT:1;              //// 运行按钮输入信号     0按下 1正常
+				  u8 SPARE2_DSC_STAT:1;              ///  停止按钮输入信号     1按下 0正常
 				 ////
-					u8 reserve:3;
+					u8 reserve:1;
 
 		/*状态0xff*/
 					u8 nfb:1; //PG10 无熔丝开关状态-输入  		1-正常，0-闭合
