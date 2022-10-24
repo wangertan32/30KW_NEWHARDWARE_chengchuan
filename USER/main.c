@@ -1,3 +1,4 @@
+//TEXT
 #include "main.h"
 uint8 First_Start;//首次上电标志
 SYSTEM_FIXED systemFixedData;//系统固定参数 主机ID和软硬件版本
