@@ -272,7 +272,7 @@ void screen_task(void *pdata)
 						{
 							case SCREEN_POWERON:  /////// 开机指令
 							
-								SCREEN_485_TX;
+								SCREEN_485_TX;  // 
 								delay_ms(10);
 								screen_ack(SCREEN_ACKON );
 								delay_ms(50);
@@ -459,10 +459,29 @@ void can_task(void *p_arg)
 
 u8 scan_txbuf[5]={0};
 void scan_task(void *pdata)
-{				
+{		
+	u8 screen_txbuf[5]={0};	
+	OS_ERR err; 
+/////////
 	while(1)
 	{
 		read_io();   ////// 读io状态
+		
+		if(SYSTEM_POWER_==POWER_ON)		 /// 开机命令
+		{
+		 screen_txbuf[0]=MSG_CAN_POWERON;    //// 给can发送消息 开机
+		 OSTaskQPost(&CanTaskTCB,(void *)screen_txbuf,3,OS_OPT_POST_FIFO,&err);
+		 OSTimeDlyHMSM(0,0,0,50,OS_OPT_TIME_PERIODIC,&err);   //延时50ms
+			
+		}	
+		if(SYSTEM_POWER_==POWER_OFF)		 /// 关机命令
+		{
+		 screen_txbuf[0]=MSG_CAN_POWEROFF;    //// 给can发送消息 开机
+		 OSTaskQPost(&CanTaskTCB,(void *)screen_txbuf,3,OS_OPT_POST_FIFO,&err);
+		 OSTimeDlyHMSM(0,0,0,50,OS_OPT_TIME_PERIODIC,&err);   //延时50ms
+			
+		}	
+		
 		delay_ms(500);
 		IWDG_Feed();//喂狗
 	}

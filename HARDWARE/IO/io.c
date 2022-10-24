@@ -86,6 +86,8 @@ io读的故障
 20   预充继电器状态-输入 
 ADD
 21   接线端子过温               x
+22   运行按钮输入信号  机柜开机按键 按下为低
+23   停止按钮输入信号  机柜关机按键 按下为高
 **************************/
 /*******
 是否不需要将全部信号上传
@@ -118,14 +120,14 @@ void read_io(void)
 			delay_ms(100);
 		if(READ_SPARE1_DSC == 0)
 		{
-				statio.io.SPARE1_DSC_STAT = 0;    //// 急停开关状态-输入
+				statio.io.SPARE1_DSC_STAT = 0;    //// 0 按下
 		}
 	}else if(READ_SPARE1_DSC == 1)
 	{
 			delay_ms(100);
 		if(READ_SPARE1_DSC == 1)
 		{
-				statio.io.SPARE1_DSC_STAT = 1;
+				statio.io.SPARE1_DSC_STAT = 1;  /// 1 正常
 		}	
 	}		
 //////// 停止按钮输入信号 0正常 1 按下	
@@ -134,14 +136,14 @@ void read_io(void)
 			delay_ms(100);
 		if(READ_SPARE2_DSC == 1)
 		{
-				statio.io.SPARE2_DSC_STAT = 1;    //// 急停开关状态-输入
+				statio.io.SPARE2_DSC_STAT = 1;    //// 1 按下
 		}
 	}else if(READ_SPARE2_DSC == 0)
 	{
 			delay_ms(100);
 		if(READ_SPARE2_DSC == 0)
 		{
-				statio.io.SPARE2_DSC_STAT = 0;
+				statio.io.SPARE2_DSC_STAT = 0;    //// 0 正常
 		}	
 	}		
 	
@@ -531,8 +533,10 @@ void read_io(void)
 //					System_State = WARNING;
 //			}
 //////////add
-		io_temp=statio.all&0xffff;// 正常0x0ffc
-if(io_temp!=0x0ffc)	   ///// 有故障发生
+
+//		io_temp=statio.all&0xffff;// 正常0x0ffc
+//if(io_temp!=0x0ffc)	   ///// 有故障发生
+
 {
 //////// 温度信号		  注意高低信号
 ////////  故障信号	
@@ -589,6 +593,35 @@ if(io_temp!=0x0ffc)	   ///// 有故障发生
 					fault_code = EMERGENCY_STOP;
 					System_State = SHUTDOWN;				 
 			 }
+//			 statio.io.SPARE1_DSC_STAT = 0;   // 开机
+			if(statio.io.SPARE1_DSC_STAT == 0)   // 开机按钮按下
+			{	
+				if(SYSTEM_POWER_==POWER_HOLD || SYSTEM_POWER_==POWER_OFF)
+				   {
+						 SYSTEM_POWER_=POWER_ON;    // 开机
+					 }
+			  else if(SYSTEM_POWER_==POWER_ON )
+				   {
+						 SYSTEM_POWER_=POWER_RUNING;    // 运行
+					 }
+			 			 
+			}
+	//		statio.io.SPARE2_DSC_STAT =0;
+			if(	statio.io.SPARE2_DSC_STAT == 1)   // 关机按钮按下
+			{	
+				if(SYSTEM_POWER_==POWER_RUNING || SYSTEM_POWER_==POWER_ON)
+				   {
+						 	   SYSTEM_POWER_=POWER_OFF;    // 关机	
+					 }
+					 
+			   else if(SYSTEM_POWER_==POWER_OFF )
+				   {
+						 	   SYSTEM_POWER_=POWER_HOLD;    // 待机
+					 }		 
+					 
+			 	 
+			}			 
+			 
 
 }		
 		

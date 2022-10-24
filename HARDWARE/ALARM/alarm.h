@@ -40,6 +40,15 @@ typedef enum
 	SHUTDOWN,
 }SYSTEM_STATE;
 extern SYSTEM_STATE System_State;
+
+typedef enum  
+{
+POWER_HOLD,	
+POWER_RUNING,
+POWER_ON,
+POWER_OFF,
+}SYSTEM_POWER_STATE;
+extern SYSTEM_POWER_STATE SYSTEM_POWER_;
 void handle_led(void);
 void handle_alarm(void);
 void handle_fault(void);

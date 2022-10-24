@@ -27,34 +27,14 @@ Project File Date:  10/08/2022
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'D:\kile_software\core\ARM\ARMCC\Bin'
 Build target 'Template'
-compiling alarm.c...
 compiling io.c...
-compiling main.c...
-main.c(486): warning:  #550-D: variable "p"  was set but never used
-  	u8 *p;
-main.c(507): warning:  #550-D: variable "p"  was set but never used
-  	u8 *p;
-main.c(785): warning:  #188-D: enumerated type mixed with another type
-  		SetPTCData.s_set_statu = RESET;   //// 
-main.c(785): warning:  #69-D: integer conversion resulted in truncation
-  		SetPTCData.s_set_statu = RESET;   //// 
-main.c(760): warning:  #177-D: function "waring_poweroff"  was declared but never referenced
-  static void waring_poweroff(void)
-main.c: 5 warnings, 0 errors
-compiling usart.c...
-..\HARDWARE\USART\usart.c(896): warning:  #177-D: variable "flag_tri"  was declared but never referenced
-  	static u8 flag_tri=0;
-..\HARDWARE\USART\usart.c: 1 warning, 0 errors
-compiling udp_demo.c...
-..\LWIP\lwip_app\udp_demo\udp_demo.c(62): warning:  #188-D: enumerated type mixed with another type
-  		err = netconn_bind(udpconn,IP_ADDR_ANY,UDP_CTR_PORT); 
-..\LWIP\lwip_app\udp_demo\udp_demo.c(76): warning:  #188-D: enumerated type mixed with another type
-  						err = netconn_send(udpconn,sentbuf);  	//将netbuf中的数据发送出去	
-..\LWIP\lwip_app\udp_demo\udp_demo.c: 2 warnings, 0 errors
+..\HARDWARE\IO\io.c(99): warning:  #177-D: variable "io_temp"  was declared but never referenced
+  		u16   io_temp=0; 
+..\HARDWARE\IO\io.c: 1 warning, 0 errors
 linking...
-Program Size: Code=147756 RO-data=178276 RW-data=920 ZI-data=403392  
+Program Size: Code=147972 RO-data=178276 RW-data=920 ZI-data=403392  
 FromELF: creating hex file...
-"..\OBJ\Template.axf" - 0 Error(s), 8 Warning(s).
+"..\OBJ\Template.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -67,7 +47,7 @@ Package Vendor: Keil
   D:\kile_software\pack\Keil\STM32F4xx_DFP\1.0.8\Device\Include
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:11
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

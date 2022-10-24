@@ -6,6 +6,8 @@ ALARM_CODE warning_code = ALARM_CODE_NULL;
 ERROR_CODE fault_code = ERROR_CODE_NULL;
 SYSTEM_STATE System_State=STANDBY;  
 
+SYSTEM_POWER_STATE SYSTEM_POWER_=POWER_HOLD;  // 电源 初始化为待机状态
+
 void handle_led(void)
 {
 	switch(System_State)

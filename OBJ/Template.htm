@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Oct 24 10:18:00 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Oct 24 17:58:42 2022
 <BR><P>
 <H3>Maximum Stack Usage =       1848 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -432,17 +432,19 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[b9]"></a>scan_task</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 104 + Unknown Stack Size
-<LI>Call Chain = scan_task &rArr; read_io &rArr; delay_ms &rArr; delay_us &rArr; delay_schedunlock &rArr; OSSchedUnlock &rArr; OSSched &rArr; OS_PrioGetHighest
+<P><STRONG><a name="[b9]"></a>scan_task</STRONG> (Thumb, 124 bytes, Stack size 24 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 168 + Unknown Stack Size
+<LI>Call Chain = scan_task &rArr; OSTaskQPost &rArr; OS_TaskQPost &rArr; OS_Post &rArr; OS_PendListRemove &rArr; OS_PendListRemove1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;read_io
 <LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
+<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OSTimeDlyHMSM
+<LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;OSTaskQPost
 <LI><a href="#[b3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;IWDG_Feed
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[bb]"></a>Write_TFCard</STRONG> (Thumb, 422 bytes, Stack size 1208 bytes, main.o(.text))
+<P><STRONG><a name="[bb]"></a>Write_TFCard</STRONG> (Thumb, 408 bytes, Stack size 1208 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 1768 + Unknown Stack Size
 <LI>Call Chain = Write_TFCard &rArr; f_open &rArr; dir_register &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write &rArr; SD_WriteDisk &rArr; SD_WriteBlock &rArr; SD_Init &rArr; SD_EnableWideBusOperation &rArr; SDEnWideBus &rArr; FindSCR &rArr; CmdResp1Error
 </UL>
@@ -504,7 +506,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[cb]"></a>start_task</STRONG> (Thumb, 544 bytes, Stack size 56 bytes, main.o(.text))
+<P><STRONG><a name="[cb]"></a>start_task</STRONG> (Thumb, 516 bytes, Stack size 56 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152 + Unknown Stack Size
 <LI>Call Chain = start_task &rArr; OSTaskCreate &rArr; OSSched &rArr; OS_PrioGetHighest
 </UL>
@@ -1093,7 +1095,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_init
 </UL>
 
-<P><STRONG><a name="[ba]"></a>read_io</STRONG> (Thumb, 2212 bytes, Stack size 8 bytes, io.o(.text))
+<P><STRONG><a name="[ba]"></a>read_io</STRONG> (Thumb, 2292 bytes, Stack size 8 bytes, io.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104 + Unknown Stack Size
 <LI>Call Chain = read_io &rArr; delay_ms &rArr; delay_us &rArr; delay_schedunlock &rArr; OSSchedUnlock &rArr; OSSched &rArr; OS_PrioGetHighest
 </UL>
@@ -1334,7 +1336,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;screen_datasend
 </UL>
 
-<P><STRONG><a name="[b1]"></a>screen_datasend</STRONG> (Thumb, 648 bytes, Stack size 24 bytes, usart.o(.text))
+<P><STRONG><a name="[b1]"></a>screen_datasend</STRONG> (Thumb, 664 bytes, Stack size 24 bytes, usart.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 312<LI>Call Chain = screen_datasend &rArr; HexToAscii
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uart_send_dma
@@ -7900,6 +7902,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tmr1_callback
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tmr2_callback
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;scan_task
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;screen_task
 <LI><a href="#[56]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART6_IRQHandler
 <LI><a href="#[44]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART5_IRQHandler
@@ -8133,6 +8136,7 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tmr1_callback
 <LI><a href="#[c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;tmr2_callback
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;scan_task
 <LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;screen_task
 <LI><a href="#[2c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_mbox_post
 </UL>
