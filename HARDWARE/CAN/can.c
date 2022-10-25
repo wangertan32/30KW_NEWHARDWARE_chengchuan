@@ -443,9 +443,9 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 		{
 			case FUNC_RCONTROL: 
 			{
-				can2_tbuf[FrameNum*8+5]=APPEND_CODEH;
-				can2_tbuf[FrameNum*8+6]=append_codel;	
-				can2_tbuf[FrameNum*8+7]=RTN_CODE;					
+				can2_tbuf[FrameNum*8+5]=APPEND_CODEH;  //遥控帧
+				can2_tbuf[FrameNum*8+6]=append_codel;	  // 休眠或唤醒
+				can2_tbuf[FrameNum*8+7]=RTN_CODE;				// 	返回码
 			}				
 			break;
 			case FUNC_SEEKSTAT:	   ///// 查询状态值
@@ -464,7 +464,7 @@ u8 can2_data_packet(u8 order, u8 append_codel, u8 len_data ,u8 *data)
 			break;
 		}
 		
-		FrameNum=PreProcess_CanOrder(order);      //// 返回数据长度 4
+		FrameNum=PreProcess_CanOrder(order);      //// 返回数据长度 4   遥控真返回3
 		
 		switch(FrameNum)
 		{

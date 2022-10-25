@@ -43,7 +43,7 @@ extern SYSTEM_STATE System_State;
 
 typedef enum  
 {
-POWER_HOLD,	
+POWER_HOLD=0,	
 POWER_RUNING,
 POWER_ON,
 POWER_OFF,

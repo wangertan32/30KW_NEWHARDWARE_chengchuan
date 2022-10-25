@@ -285,7 +285,8 @@ void screen_task(void *pdata)
 							break;
 							
 							case SCREEN_POWEROFF:   ///// 关机指令
-				
+//// 有故障下发关机指令				
+							 SYSTEM_POWER_=POWER_OFF; 
 								poweroff();
 
 							
@@ -482,7 +483,7 @@ void scan_task(void *pdata)
 			
 		}	
 		
-		delay_ms(500);
+		delay_ms(500);    ////// 
 		IWDG_Feed();//喂狗
 	}
 }

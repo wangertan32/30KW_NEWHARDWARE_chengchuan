@@ -114,7 +114,7 @@ void read_io(void)
 //	{
 //				statio.io.TERMINAL_STAT = 0;
 //	}
-////////////// 运行按钮输入信号 0按下 1正常
+////////////// 运行按钮输入信号 0按下 1正常  // 一次按下
 	if(READ_SPARE1_DSC == 0)
 	{
 			delay_ms(100);
@@ -593,30 +593,34 @@ void read_io(void)
 					fault_code = EMERGENCY_STOP;
 					System_State = SHUTDOWN;				 
 			 }
-//			 statio.io.SPARE1_DSC_STAT = 0;   // 开机
+//			 statio.io.SPARE1_DSC_STAT = 0;   // 开机 检测一次还是一直被按下？
 			if(statio.io.SPARE1_DSC_STAT == 0)   // 开机按钮按下
 			{	
 				if(SYSTEM_POWER_==POWER_HOLD || SYSTEM_POWER_==POWER_OFF)
 				   {
 						 SYSTEM_POWER_=POWER_ON;    // 开机
+						 
 					 }
 			  else if(SYSTEM_POWER_==POWER_ON )
 				   {
 						 SYSTEM_POWER_=POWER_RUNING;    // 运行
+						 
 					 }
 			 			 
 			}
-	//		statio.io.SPARE2_DSC_STAT =0;
+	//		statio.io.SPARE2_DSC_STAT =0;    //测试
 			if(	statio.io.SPARE2_DSC_STAT == 1)   // 关机按钮按下
 			{	
 				if(SYSTEM_POWER_==POWER_RUNING || SYSTEM_POWER_==POWER_ON)
 				   {
-						 	   SYSTEM_POWER_=POWER_OFF;    // 关机	
+						 	   SYSTEM_POWER_=POWER_OFF;    // 关机
+						 
 					 }
 					 
 			   else if(SYSTEM_POWER_==POWER_OFF )
 				   {
-						 	   SYSTEM_POWER_=POWER_HOLD;    // 待机
+						 //	   SYSTEM_POWER_=POWER_HOLD;    // 待机
+						 
 					 }		 
 					 
 			 	 

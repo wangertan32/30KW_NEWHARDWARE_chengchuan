@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Oct 24 17:58:42 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Oct 25 10:13:16 2022
 <BR><P>
 <H3>Maximum Stack Usage =       1848 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -394,7 +394,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[ac]"></a>screen_task</STRONG> (Thumb, 506 bytes, Stack size 24 bytes, main.o(.text))
+<P><STRONG><a name="[ac]"></a>screen_task</STRONG> (Thumb, 512 bytes, Stack size 24 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 344 + Unknown Stack Size
 <LI>Call Chain = screen_task &rArr; poweroff &rArr; screen_ack &rArr; HexToAscii
 </UL>
@@ -506,7 +506,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[cb]"></a>start_task</STRONG> (Thumb, 516 bytes, Stack size 56 bytes, main.o(.text))
+<P><STRONG><a name="[cb]"></a>start_task</STRONG> (Thumb, 518 bytes, Stack size 56 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152 + Unknown Stack Size
 <LI>Call Chain = start_task &rArr; OSTaskCreate &rArr; OSSched &rArr; OS_PrioGetHighest
 </UL>
@@ -1095,7 +1095,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_init
 </UL>
 
-<P><STRONG><a name="[ba]"></a>read_io</STRONG> (Thumb, 2292 bytes, Stack size 8 bytes, io.o(.text))
+<P><STRONG><a name="[ba]"></a>read_io</STRONG> (Thumb, 2280 bytes, Stack size 8 bytes, io.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104 + Unknown Stack Size
 <LI>Call Chain = read_io &rArr; delay_ms &rArr; delay_us &rArr; delay_schedunlock &rArr; OSSchedUnlock &rArr; OSSched &rArr; OS_PrioGetHighest
 </UL>
