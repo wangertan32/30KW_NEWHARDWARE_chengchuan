@@ -95,8 +95,8 @@ ADD
 *******/
 void read_io(void)
 {
-//	u8 io_temp=0; 
-		u16   io_temp=0; 
+	u8 io_temp=0; 
+//		u16   io_temp=0; 
 //////////////////// add
 // 假设接线端子1 报警 / 0 正常	
 //	if(READ_TERMINAL_STAT == 1)    //接线端子温度80℃
@@ -117,14 +117,14 @@ void read_io(void)
 ////////////// 运行按钮输入信号 0按下 1正常  // 一次按下
 	if(READ_SPARE1_DSC == 0)
 	{
-			delay_ms(100);
+			delay_ms(10);   /// 100-10
 		if(READ_SPARE1_DSC == 0)
 		{
 				statio.io.SPARE1_DSC_STAT = 0;    //// 0 按下
 		}
 	}else if(READ_SPARE1_DSC == 1)
 	{
-			delay_ms(100);
+			delay_ms(10);
 		if(READ_SPARE1_DSC == 1)
 		{
 				statio.io.SPARE1_DSC_STAT = 1;  /// 1 正常
@@ -133,17 +133,17 @@ void read_io(void)
 //////// 停止按钮输入信号 0正常 1 按下	
 	if(READ_SPARE2_DSC == 1)
 	{
-			delay_ms(100);
+			delay_ms(10);
 		if(READ_SPARE2_DSC == 1)
 		{
-				statio.io.SPARE2_DSC_STAT = 1;    //// 1 按下
+				statio.io.SPARE2_DSC_STAT = 1;    //// 1 按下   接反了  正常
 		}
 	}else if(READ_SPARE2_DSC == 0)
 	{
-			delay_ms(100);
+			delay_ms(10);
 		if(READ_SPARE2_DSC == 0)
 		{
-				statio.io.SPARE2_DSC_STAT = 0;    //// 0 正常
+				statio.io.SPARE2_DSC_STAT = 0;    //// 0 正常  接反了 按下
 		}	
 	}		
 	
@@ -287,7 +287,7 @@ void read_io(void)
 		statio.io.fan = 1;
 	}		
 	
-	if(READ_REMOTE_RUN == 0)      /// 远程控制运行信号-输入
+	if(READ_REMOTE_RUN == 0)      /// 远程控制运行信号-输入  热备份使用
 	{
 			delay_ms(100);
 		if(READ_REMOTE_RUN == 0)
@@ -303,7 +303,7 @@ void read_io(void)
 		}	
 	}
 	
-	if(READ_REMOTE_STOP == 0)      //// 远程控制停止信号-输入
+	if(READ_REMOTE_STOP == 0)      //// 远程控制停止信号-输入 热备份使用
 	{
 			delay_ms(100);
 		if(READ_REMOTE_STOP == 0)
@@ -479,98 +479,71 @@ void read_io(void)
 		}	
 	}
 	
-//	io_temp=statio.all&0xff;//正常0xfc
+	io_temp=statio.all&0xff;//正常0xfc
 	
 //	io_ctr=(statio.all>>8)&0xff;//0x0f
 //	io_status=(statio.all>>16)&0xff;//0XCF
-/**温度处理**/	 
-//		 if(io_temp != 0xfc)
-//		 {
-//				if(statio.io.extohd==0)
-//				{
-//					warning_code=OVEXT;
-//				}
-//					
-//				if(statio.io.intohd==0)
-//				{
-//					warning_code=OVINT;
-//				}
-//					
-//				if(statio.io.smoke==0)
-//				{
-//					warning_code=SMOKE;
-//				}
-//					
-//				if(statio.io.fan==0)
-//				{
-//					warning_code=MFAN;	
-//				}
-//							 
-//				if(statio.io.th3==1)
-//				{
-//					warning_code=OVTH3;
-//				}
-//				
-//				if(statio.io.th7==1)
-//				{
-//					warning_code=OVTH7;
-//				}
-//					
-//				if(statio.io.th60==0)
-//				{
-//					warning_code=OVTH60;
-//				}
-//				
-//				if(statio.io.th80==0)
-//				{
-//					warning_code=OVTH80;
-//				}			 
-//		 }
-//			if(io_temp == 0xfc)
-//			{
-//				warning_code = ALARM_CODE_NULL;
-//			}else{
-//					System_State = WARNING;
-//			}
-//////////add
-
-//		io_temp=statio.all&0xffff;// 正常0x0ffc
-//if(io_temp!=0x0ffc)	   ///// 有故障发生
-
-{
-//////// 温度信号		  注意高低信号
-////////  故障信号	
-				if(statio.io.extohd==0)  ////外部感温线故障   waring
+/**温度处理**/	 	
+		 if(io_temp != 0xfc)
+		 {
+				if(statio.io.extohd==0)
 				{
 					warning_code=OVEXT;
-					System_State = WARNING;
-				}		
-				if(statio.io.th7==1)  ////谐振电容75°过温    waring 
-				{
-					warning_code=OVTH7 ;
-					System_State = WARNING;
 				}
+					
+				if(statio.io.intohd==0)
+				{
+					warning_code=OVINT;
+				}
+					
+				if(statio.io.smoke==0)
+				{
+					warning_code=SMOKE;
+				}
+					
+				if(statio.io.fan==0)
+				{
+					warning_code=MFAN;	
+				}
+							 
+				if(statio.io.th3==1)
+				{
+					warning_code=OVTH3;
+				}
+				
+				if(statio.io.th7==1)
+				{
+					warning_code=OVTH7;
+				}
+					
+				if(statio.io.th60==0)
+				{
+					warning_code=OVTH60;
+				}
+				
+				if(statio.io.th80==0)
+				{
+					warning_code=OVTH80;
+				}			 
+		 }
+			if(io_temp == 0xfc)
+			{
+				warning_code = ALARM_CODE_NULL;
+			}else{
+				   if(warning_code==OVTH60) //60°
+				      System_State = RUNNING;   /// 上报故障 但运行
+					 else
+					    System_State = WARNING;
+			}
+	io_temp=(statio.all>>8)&0xff;//0x2f  0010 1111
+if(io_temp!=0x2f)   // 不正常 
+{
 //				if(statio.io.TERMINAL_STAT==0)  ////接线端子80°过温  waring
 //				{
 //					warning_code= OVTERMINAL ;
+//	        System_State = WARNING;
 //				}
-				if(statio.io.th80==0)  ////散热器80°过温  waring
-				{
-					warning_code=OVTH80  ;
-					System_State = WARNING;
-				}
-				if(statio.io.th60==0)  ////散热器60°过温  waring
-				{
-					warning_code= OVTH60 ;
-					System_State = WARNING;
-				}
-				if(statio.io.fan==0)  ////风扇故障   waring
-				{
-					warning_code=MFAN  ;
-					System_State = WARNING;
-				}				
-				
-//////状态信号				
+				////
 				if(statio.io.mfuse==0)  ////主功率保险断开   fault
 				{
 					fault_code=MFUSE_BROKEN  ;
@@ -585,14 +558,89 @@ void read_io(void)
 				{
 					fault_code=MC1_OPEN  ;
 					System_State = FAULT;
-				}				
-				
-///// 控制信号	急停发生 
-		  if(statio.io.emo==0)
+				}		
+			 if(statio.io.emo==0)  //急停信号
 			 {
 					fault_code = EMERGENCY_STOP;
 					System_State = SHUTDOWN;				 
-			 }
+			 }	
+}	
+/////////////////////////////////////////
+//	if(io_temp == 0x2f)  // 正常
+//			{
+//				warning_code = ALARM_CODE_NULL;
+//			}else{
+//					System_State = WARNING;
+//			}
+
+
+
+//////////add
+
+//		io_temp=statio.all&0xffff;// 正常0x0ffc
+//if(io_temp!=0x0ffc)	   ///// 有故障发生
+
+{
+//////// 温度信号		  注意高低信号
+////////  故障信号
+////////// 测试 暂时关闭故障	
+	
+//	       statio.io.extohd=0;
+//				if(statio.io.extohd==0)  ////外部感温线故障   waring
+//				{
+//					warning_code=OVEXT;
+//					System_State = WARNING;
+//				}		
+//				if(statio.io.th7==1)  ////谐振电容75°过温    waring 
+//				{
+//					warning_code=OVTH7 ;
+//					System_State = WARNING;
+//				}
+//				if(statio.io.TERMINAL_STAT==0)  ////接线端子80°过温  waring
+//				{
+//					warning_code= OVTERMINAL ;
+//				 System_State = WARNING;
+//				}
+//				if(statio.io.th80==0)  ////散热器80°过温  waring
+//				{
+//					warning_code=OVTH80  ;
+//					System_State = WARNING;
+//				}
+		//		statio.io.th60=0;
+//				if(statio.io.th60==0)  ////散热器60°过温  waring
+//				{
+//					warning_code= OVTH60 ;
+//					System_State = RUNNING;  ////不关机
+//				}
+//				if(statio.io.fan==0)  ////风扇故障   waring
+//				{
+//					warning_code=MFAN  ;
+//					System_State = WARNING;
+//				}				
+				
+//////状态信号				
+//				if(statio.io.mfuse==0)  ////主功率保险断开   fault
+//				{
+//					fault_code=MFUSE_BROKEN  ;
+//					System_State = FAULT;
+//				}	
+//				if(statio.io.mc2==0)  ////预充接触器粘连故障   fault
+//				{
+//					fault_code=MC2_OPEN  ;
+//					System_State = FAULT;
+//				}
+//				if(statio.io.mc1==0)  ////主功率接触器粘连故障  fault
+//				{
+//					fault_code=MC1_OPEN  ;
+//					System_State = FAULT;
+//				}				
+				
+///// 控制信号	急停发生 
+//		  if(statio.io.emo==0)
+//			 {
+//					fault_code = EMERGENCY_STOP;
+//					System_State = SHUTDOWN;				 
+//			 }
 //			 statio.io.SPARE1_DSC_STAT = 0;   // 开机 检测一次还是一直被按下？
 			if(statio.io.SPARE1_DSC_STAT == 0)   // 开机按钮按下
 			{	
@@ -609,7 +657,7 @@ void read_io(void)
 			 			 
 			}
 	//		statio.io.SPARE2_DSC_STAT =0;    //测试
-			if(	statio.io.SPARE2_DSC_STAT == 1)   // 关机按钮按下
+			if(	statio.io.SPARE2_DSC_STAT == 0)   // 关机按钮按下  接反了  1-0
 			{	
 				if(SYSTEM_POWER_==POWER_RUNING || SYSTEM_POWER_==POWER_ON)
 				   {
@@ -636,11 +684,11 @@ void read_io(void)
 //////////////////
 /**控制信号**/	
 ////////////// 机柜急停
-//		  if(statio.io.emo==0)
-//			 {
-//					fault_code = EMERGENCY_STOP;
-//					System_State = SHUTDOWN;				 
-//			 }
+		  if(statio.io.emo==0)
+			 {
+					fault_code = EMERGENCY_STOP;
+					System_State = SHUTDOWN;				 
+			 }
 	 
 }
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Oct 25 10:13:16 2022
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Oct 28 15:05:25 2022
 <BR><P>
 <H3>Maximum Stack Usage =       1848 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -471,8 +471,8 @@ Global Symbols
 <LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_init
 </UL>
 
-<P><STRONG><a name="[c8]"></a>can_task</STRONG> (Thumb, 318 bytes, Stack size 24 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 1800 + Unknown Stack Size
+<P><STRONG><a name="[c8]"></a>can_task</STRONG> (Thumb, 336 bytes, Stack size 32 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 1808 + Unknown Stack Size
 <LI>Call Chain = can_task &rArr; Write_Log &rArr; Write_TFCard &rArr; f_open &rArr; dir_register &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write &rArr; SD_WriteDisk &rArr; SD_WriteBlock &rArr; SD_Init &rArr; SD_EnableWideBusOperation &rArr; SDEnWideBus &rArr; FindSCR &rArr; CmdResp1Error
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;screen_datasend
@@ -506,7 +506,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> main.o(.text)
 </UL>
-<P><STRONG><a name="[cb]"></a>start_task</STRONG> (Thumb, 518 bytes, Stack size 56 bytes, main.o(.text))
+<P><STRONG><a name="[cb]"></a>start_task</STRONG> (Thumb, 522 bytes, Stack size 56 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152 + Unknown Stack Size
 <LI>Call Chain = start_task &rArr; OSTaskCreate &rArr; OSSched &rArr; OS_PrioGetHighest
 </UL>
@@ -1095,7 +1095,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sys_init
 </UL>
 
-<P><STRONG><a name="[ba]"></a>read_io</STRONG> (Thumb, 2280 bytes, Stack size 8 bytes, io.o(.text))
+<P><STRONG><a name="[ba]"></a>read_io</STRONG> (Thumb, 2374 bytes, Stack size 8 bytes, io.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 104 + Unknown Stack Size
 <LI>Call Chain = read_io &rArr; delay_ms &rArr; delay_us &rArr; delay_schedunlock &rArr; OSSchedUnlock &rArr; OSSched &rArr; OS_PrioGetHighest
 </UL>

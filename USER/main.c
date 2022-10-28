@@ -239,6 +239,9 @@ void start_task(void *p_arg)
                  (void   	* )0,				
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
                  (OS_ERR 	* )&err);	
+								 
+								 
+								 
 							 
 								 
 		OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);		//挂起开始任务	
@@ -256,6 +259,9 @@ void screen_task(void *pdata)
 	u8 screen_txbuf[5]={0};
 	OSTmrStart(&tmr1,&err);	//定时上传数据
 	OSTmrStart(&tmr2,&err);	//启动CSU-PTC心跳包
+	
+//	OSTmrStop(&tmr2,&err);	//启动CSU-PTC心跳包	
+	
 	while(1)
 	{
 		//请求消息  接收屏的指令
@@ -368,6 +374,8 @@ void can_task(void *p_arg)
 	OS_ERR err; 
 	OS_MSG_SIZE size;
 	u8 data[6]={0};
+	
+		u8 screen_txbuf[5]={0};	
 	while(1)
 	{
 		//请求消息  等待消息队列
@@ -391,11 +399,36 @@ void can_task(void *p_arg)
 					break;
 										
 					case MSG_CAN_POWERON:   //开
-						 poweron();									
+						 poweron();			
+            // 开机成功 打开定时器上传数据 失败不开启定时器
+//				     	if( SYSTEM_POWER_==POWER_ON)
+//							{
+//             	   OSTmrStart(&tmr1,&err);	//定时上传数据
+//	               OSTmrStart(&tmr2,&err);	//启动CSU-PTC心跳包
+//							}
+//				     	if( SYSTEM_POWER_==POWER_ON_FAULT)  //开机失败 上传开机失败
+//							{						
+//             	  screen_datasend(SCREEN_ACKDATA);   //// 发送开机失败
+//								SYSTEM_POWER_=POWER_HOLD;    //
+//							}							
+							
+							
+							
+					
+           //// 开机之后为运行状态
+	//				SYSTEM_POWER_=POWER_RUNING;    // 运行
 					break;
 
-					case MSG_CAN_POWEROFF:   //关
+					case MSG_CAN_POWEROFF:   //关  关闭定时器？
 						 poweroff();
+					
+					
+//						if( SYSTEM_POWER_==POWER_OFF_FAULT)  //开机失败 上传开机失败
+//							{						
+//            	  screen_datasend(SCREEN_ACKDATA);   //// 发送开机失败
+//				//				SYSTEM_POWER_=POWER_HOLD;    //
+//							}	
+					
 					break;
 					
 					case MSG_CAN_CONFIG_NUM:   //配置机号
@@ -414,7 +447,25 @@ void can_task(void *p_arg)
 							{
 //								waring_poweroff();
 							}
-							screen_datasend(SCREEN_ACKDATA);   //// 定时发送数据
+							
+									
+					 screen_datasend(SCREEN_ACKDATA);   //// 正常定时发送数据
+			     
+					 if(SYSTEM_POWER_==POWER_ON )   //// 第一次发送完开机日记后  若开机成功
+				   {
+						 SYSTEM_POWER_=POWER_RUNING;    // 运行
+						 
+					 }
+					 
+					 
+//					 
+//					 if(SYSTEM_POWER_==POWER_OFF  || SYSTEM_POWER_==POWER_OFF_FAULT )    //// 关机按钮 关机成功 或 关机失败
+//				   {
+//						 SYSTEM_POWER_=POWER_HOLD;    // 待机
+//						 
+//					 }				
+					 
+					 
 					break;
 									
 					case MSG_CAN_CONFIG_SEARCH_STATE:   //查询状态值  300ms
@@ -473,20 +524,38 @@ void scan_task(void *pdata)
 		 screen_txbuf[0]=MSG_CAN_POWERON;    //// 给can发送消息 开机
 		 OSTaskQPost(&CanTaskTCB,(void *)screen_txbuf,3,OS_OPT_POST_FIFO,&err);
 		 OSTimeDlyHMSM(0,0,0,50,OS_OPT_TIME_PERIODIC,&err);   //延时50ms
+		// 开机之后启动定时器发数据
+//	   OSTmrStart(&tmr1,&err);	//定时上传数据
+//	   OSTmrStart(&tmr2,&err);	//启动CSU-PTC心跳包
 			
 		}	
-		if(SYSTEM_POWER_==POWER_OFF)		 /// 关机命令
+		if(SYSTEM_POWER_==POWER_OFF)		 /// 关机命令  关闭定时器
 		{
-		 screen_txbuf[0]=MSG_CAN_POWEROFF;    //// 给can发送消息 开机
+		 screen_txbuf[0]=MSG_CAN_POWEROFF;    //// 给can发送消息 关机
 		 OSTaskQPost(&CanTaskTCB,(void *)screen_txbuf,3,OS_OPT_POST_FIFO,&err);
 		 OSTimeDlyHMSM(0,0,0,50,OS_OPT_TIME_PERIODIC,&err);   //延时50ms
 			
 		}	
 		
-		delay_ms(500);    ////// 
+		
+//		if(SYSTEM_POWER_==POWER_HOLD)		 //待机状态,
+//		{
+//		    delay_ms(100);    ////// 				
+//		    IWDG_Feed();//喂狗
+		
+//		}
+//		else{
+//		
+		delay_ms(500);    ////// 				
 		IWDG_Feed();//喂狗
+//		}
 	}
 }
+
+
+
+
+
 
 void handle_task(void *pdata)
 {				
@@ -738,6 +807,7 @@ static void poweron(void)
 			Can2Send_MultiMessages(canid_tx, can2_tbuf, num_frame*8);	
 			delay_ms(100); 
 			i++;
+	
 	} 
 	if((PTCElectData.g_PTC_State >>8)&0x01)
 	{
@@ -747,8 +817,16 @@ static void poweron(void)
 			delay_ms(500);
 			SCREEN_485_RX;
 			delay_ms(10);
-			System_State = RUNNING;
+			System_State = RUNNING;    //// 开机成功
 	}
+//	else {      //// 开机失败
+//		
+//		    SYSTEM_POWER_=POWER_ON_FAULT;    // 开机失败状态
+//        System_State = STANDBY;    //// 不成功待机
+//	}
+	
+	
+	
 }	
 	
 static void poweroff(void)
@@ -772,10 +850,18 @@ static void poweroff(void)
 			delay_ms(10);
 			SCREEN_485_RX;
 		
-		warning_code=ALARM_CODE_NULL;
+		warning_code=ALARM_CODE_NULL;   // 关机成功
 	  fault_code=ERROR_CODE_NULL;
-		System_State=STANDBY; 
+		System_State=STANDBY;         // 关机成功 待机
 	}
+//		else {      //// 关机失败
+//		
+//		    SYSTEM_POWER_=POWER_OFF_FAULT;    // 关机失败状态
+//			//  		System_State=STANDBY; 
+//	}
+	
+	
+	
 
 }	
 static void waring_poweroff(void)

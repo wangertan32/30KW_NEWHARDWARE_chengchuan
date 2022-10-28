@@ -47,6 +47,9 @@ POWER_HOLD=0,
 POWER_RUNING,
 POWER_ON,
 POWER_OFF,
+POWER_FAULT,	  /// 开机或关机成功
+POWER_ON_FAULT,	/// 开机失败
+POWER_OFF_FAULT,	/// 关机失败	
 }SYSTEM_POWER_STATE;
 extern SYSTEM_POWER_STATE SYSTEM_POWER_;
 void handle_led(void);

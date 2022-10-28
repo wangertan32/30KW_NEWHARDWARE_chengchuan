@@ -908,8 +908,6 @@ void screen_datasend(u8 order)
 	AppendTwoBytes(mcgs_buf, &len, warning_code);    ///警告信息 温度 风扇 烟感等
 	AppendTwoBytes(mcgs_buf, &len, fault_code);      ///错误信息  功率开关 急停等
 	
-// 	AppendTwoBytes(mcgs_buf, &len, SYSTEM_POWER_);      ///上传开机关机信息	
-	
 	
 //////// 输入假数据
 //	AppendTwoBytes(mcgs_buf, &len, System_State);	
@@ -960,7 +958,7 @@ void screen_datasend(u8 order)
 
 	AppendTwoBytes(mcgs_buf, &len, PTCElectData.g_INVAlarm_State);  //PTC上传INV告警量	
 	////// 
-	 	AppendTwoBytes(mcgs_buf, &len, SYSTEM_POWER_);      ///上传开机关机信息	
+	AppendTwoBytes(mcgs_buf, &len, SYSTEM_POWER_);      ///上传开机关机信息	
 	
 	if((PTCElectData.g_pfc_State>>8)&0x08)
 	{
